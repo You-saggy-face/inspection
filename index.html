@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>へや の てんけん ロールプレイ / Room Inspection Roleplay</title>
+<style>
+  :root{
+    --bg:#7494c0;
+    --inspector:#ffffff;
+    --foreigner:#8de055;
+    --text:#222;
+    --en:#6a6a6a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    background:#e9eef5;
+    color:var(--text);
+    display:flex;
+    justify-content:center;
+  }
+  .phone{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    background:var(--bg);
+    display:flex;
+    flex-direction:column;
+  }
+  header{
+    background:#5b7aa8;
+    color:#fff;
+    padding:14px 16px;
+    text-align:center;
+  }
+  header h1{margin:0;font-size:17px;}
+  header p{margin:4px 0 0;font-size:12px;opacity:.85;}
+  .scene{
+    background:#fff7d6;
+    color:#7a6a20;
+    font-size:12.5px;
+    line-height:1.6;
+    padding:10px 16px;
+    border-bottom:1px solid #e7dca5;
+  }
+  .chat{
+    flex:1;
+    padding:14px 12px 100px;
+    overflow-y:auto;
+  }
+  .row{
+    display:flex;
+    margin:14px 0;
+    animation:pop .25s ease;
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .row.left{justify-content:flex-start;}
+  .row.right{justify-content:flex-end;}
+  .row.center{justify-content:center;}
+  .sysmsg{
+    background:rgba(0,0,0,.28);
+    color:#fff;
+    text-align:center;
+    padding:6px 14px;
+    border-radius:14px;
+    font-size:14px;
+    max-width:82%;
+  }
+  .sysmsg .en{color:#e6ebf2;margin-top:3px;}
+  .who{
+    font-size:11px;
+    color:#eef;
+    margin:0 8px;
+    align-self:flex-end;
+    white-space:nowrap;
+  }
+  .bubble{
+    max-width:74%;
+    padding:9px 12px;
+    border-radius:16px;
+    font-size:15px;
+    line-height:1.55;
+    position:relative;
+    box-shadow:0 1px 1px rgba(0,0,0,.12);
+  }
+  .left .bubble{background:var(--inspector);border-top-left-radius:4px;}
+  .right .bubble{background:var(--foreigner);border-top-right-radius:4px;}
+  .jp{
+    font-weight:600;
+    letter-spacing:.3px;
+    word-break:keep-all;      /* たんご の とちゅう で おらない */
+    overflow-wrap:normal;
+    line-break:strict;
+  }
+  .en{
+    display:block;
+    margin-top:5px;
+    font-size:12px;
+    color:var(--en);
+    font-weight:400;
+    line-height:1.4;
+  }
+  body.hide-en .en{display:none;}
+  .controls{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    max-width:480px;
+    background:#fff;
+    border-top:1px solid #ddd;
+    padding:10px 12px;
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+  button{
+    flex:1;
+    padding:12px;
+    font-size:15px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:700;
+  }
+  #next{background:#06c755;color:#fff;}
+  #next:disabled{background:#bbb;cursor:default;}
+  .small{flex:0 0 auto;background:#eef1f5;color:#333;font-size:13px;padding:12px 14px;}
+  .vocab{
+    background:#fff;
+    margin:0;
+    padding:18px 16px 40px;
+  }
+  .vocab h2{font-size:16px;margin:0 0 10px;}
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th,td{border:1px solid #ddd;padding:8px 10px;text-align:left;}
+  th{background:#5b7aa8;color:#fff;}
+  tr:nth-child(even){background:#f5f8fc;}
+  .jpcol{font-weight:600;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <header>
+    <h1>へや の てんけん ロールプレイ</h1>
+    <p>Room Inspection Roleplay — Fire Evacuation Equipment Check</p>
+  </header>
+
+  <div class="scene">
+    <b>シチュエーション / Situation:</b><br>
+    にほん に すんで いる たけしさん の へや に、しゅうまつ てんけん が あります。<br>
+    There is a weekend inspection at the room of Takeshi, who lives in Japan.<br>
+    かじ の とき に つかう どうぐ の てんけん です。<br>
+    It is an inspection of the equipment used in case of a fire.
+  </div>
+
+  <div class="chat" id="chat"></div>
+
+  <div class="controls">
+    <button id="next">つぎへ / Next ▶</button>
+    <button class="small" id="toggle">EN おふ</button>
+    <button class="small" id="reset">さいしょ</button>
+  </div>
+
+  <div class="vocab">
+    <h2>たいせつ な ことば / Key Vocabulary</h2>
+    <table>
+      <thead><tr><th>にほんご (Japanese)</th><th>えいご (English)</th></tr></thead>
+      <tbody>
+        <tr><td class="jpcol">てんけん</td><td>inspection / check</td></tr>
+        <tr><td class="jpcol">かんり</td><td>management (of a building)</td></tr>
+        <tr><td class="jpcol">かじ</td><td>fire</td></tr>
+        <tr><td class="jpcol">にげる</td><td>to escape / to run away</td></tr>
+        <tr><td class="jpcol">はしご</td><td>ladder</td></tr>
+        <tr><td class="jpcol">ベランダ</td><td>balcony</td></tr>
+        <tr><td class="jpcol">しらべる</td><td>to check / to examine</td></tr>
+        <tr><td class="jpcol">ふた</td><td>lid / cover</td></tr>
+        <tr><td class="jpcol">おろす</td><td>to lower (something down)</td></tr>
+        <tr><td class="jpcol">けむり</td><td>smoke</td></tr>
+        <tr><td class="jpcol">センサー</td><td>sensor (smoke alarm)</td></tr>
+        <tr><td class="jpcol">てんじょう</td><td>ceiling</td></tr>
+        <tr><td class="jpcol">でんち</td><td>battery</td></tr>
+        <tr><td class="jpcol">だいじょうぶ</td><td>okay / no problem</td></tr>
+        <tr><td class="jpcol">あんしん</td><td>relief / peace of mind</td></tr>
+        <tr><td class="jpcol">かんりにん</td><td>building manager</td></tr>
+        <tr><td class="jpcol" colspan="2" style="background:#eef3fa;font-size:12px;color:#555;">⬇ いか は すこし むずかしい ことば / A bit more advanced ⬇</td></tr>
+        <tr><td class="jpcol">ひなん どうぐ</td><td>evacuation equipment</td></tr>
+        <tr><td class="jpcol">ひなん はしご</td><td>evacuation ladder</td></tr>
+        <tr><td class="jpcol">うかがう</td><td>to visit (polite word for "to come")</td></tr>
+        <tr><td class="jpcol">いざ という とき</td><td>in an emergency</td></tr>
+        <tr><td class="jpcol">わざわざ</td><td>to go out of one's way to do something</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const lines = [
+  ["center","","🔔 ピンポーン 🔔","(The inspector rings the doorbell)"],
+  ["right","たけしさん","はい。どなた です か。","Yes. Who is it?"],
+  ["left","ぎょうしゃ","おはよう ございます。ABC かんり の さとう です。","Good morning. I'm Sato from ABC Management."],
+  ["right","たけしさん","あ、はい。いま、ドア を あけます ね。","Oh, yes. I'll open the door now."],
+  ["center","","🚪 ガチャ（ドア が あく）","(The door opens)"],
+  ["right","たけしさん","おはよう ございます。","Good morning."],
+  ["left","ぎょうしゃ","おはよう ございます。","Good morning."],
+  ["left","ぎょうしゃ","きょう、へや の てんけん に きました。いま、いい です か。","I came for the room inspection today. Is now okay?"],
+  ["right","たけしさん","あ、はい、だいじょうぶ です。どうぞ、はいって ください。","Oh, yes, that's fine. Please, come in."],
+  ["left","ぎょうしゃ","ありがとう ございます。おじゃまします。… えっと、ベランダ、みせて もらえます か。","Thank you. Excuse me for coming in. … Um, could you show me the balcony?"],
+  ["right","たけしさん","はい、こっち です。","Yes, it's this way."],
+  ["left","ぎょうしゃ","かじ の とき に、にげる ため の はしご です。これ、ちゃんと うごく か、みます ね。","It's a ladder for escaping in a fire. I'll check if it works properly."],
+  ["right","たけしさん","へえ、これ、はしご なん です ね。しらなかった です。","Oh, so this is a ladder. I had no idea."],
+  ["left","ぎょうしゃ","そう なん です よ。もし かじ が おきたら、この ふた を あけて、した に おろします。","That's right. If a fire breaks out, you open this lid and lower it down."],
+  ["right","たけしさん","なるほど。… ちょっと、やって みても いい です か。","I see. … Can I try it a little?"],
+  ["left","ぎょうしゃ","あ、きょう は てんけん だけ なので、そのまま で だいじょうぶ です よ。","Ah, today is just the inspection, so you can leave it as it is."],
+  ["right","たけしさん","あ、そう なん です ね。わかりました。","Oh, is that so. Got it."],
+  ["left","ぎょうしゃ","はい、ベランダ は もんだい なし です。つぎ、てんじょう の これ、みせて ください ね。","Okay, the balcony is fine. Next, please show me this one on the ceiling."],
+  ["right","たけしさん","これ です か？ ときどき、ピッて なる やつ。","Is it this? The one that sometimes goes \"beep.\""],
+  ["left","ぎょうしゃ","そう そう、それ です。けむり の センサー です。… でんち、だいじょうぶ です ね。","Yes, yes, that's it. It's the smoke sensor. … The battery is fine."],
+  ["right","たけしさん","よかった。なんか、あんしん しました。","Good. Somehow, I feel relieved."],
+  ["left","ぎょうしゃ","ぜんぶ、もんだい なかった です よ。これ で てんけん、おわり です。","There were no problems at all. With this, the inspection is done."],
+  ["right","たけしさん","ありがとう ございました。わざわざ すみません。","Thank you very much. Sorry to make you come all this way."],
+  ["left","ぎょうしゃ","いえいえ。もし なにか あったら、いつでも かんりにん に いって ください ね。","Not at all. If anything comes up, please tell the manager anytime."],
+  ["right","たけしさん","はい、わかりました。ありがとう ございました。","Yes, understood. Thank you very much."],
+  ["left","ぎょうしゃ","では、しつれいします。よい しゅうまつ を〜。","Well then, goodbye. Have a good weekend."]
+];
+
+let i = 0;
+const chat = document.getElementById("chat");
+const nextBtn = document.getElementById("next");
+
+function show(){
+  if(i >= lines.length) return;
+  const [side,who,jp,en] = lines[i];
+  const row = document.createElement("div");
+  row.className = "row " + side;
+  const whoEl = `<span class="who">${who}</span>`;
+  const bubble = `<div class="bubble"><span class="jp">${jp}</span><span class="en">${en}</span></div>`;
+  if(side === "center"){
+    row.innerHTML = `<div class="sysmsg"><span class="jp">${jp}</span><span class="en">${en}</span></div>`;
+  } else {
+    row.innerHTML = side === "left" ? whoEl + bubble : bubble + whoEl;
+  }
+  chat.appendChild(row);
+  row.scrollIntoView({behavior:"smooth",block:"end"});
+  i++;
+  if(i >= lines.length){
+    nextBtn.textContent = "おわり / The End ✓";
+    nextBtn.disabled = true;
+  }
+}
+
+nextBtn.addEventListener("click", show);
+
+document.getElementById("toggle").addEventListener("click", e=>{
+  document.body.classList.toggle("hide-en");
+  const off = document.body.classList.contains("hide-en");
+  e.target.textContent = off ? "EN おん" : "EN おふ";
+});
+
+document.getElementById("reset").addEventListener("click", ()=>{
+  chat.innerHTML = "";
+  i = 0;
+  nextBtn.textContent = "つぎへ / Next ▶";
+  nextBtn.disabled = false;
+  show();
+});
+
+show();
+</script>
+</body>
+</html>
